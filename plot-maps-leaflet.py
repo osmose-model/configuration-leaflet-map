@@ -2,29 +2,44 @@ import folium
 import xarray as xr
 import numpy as np
 import matplotlib as mp
+import os
 import matplotlib.colors as cl
+from pathlib import Path
+from domains import domains
 
 cmap = mp.colormaps['Spectral']
 
-domains = {}
-domains['MED'] = {
-'lonbnd': (-8.018472178892981, 38.83837833251987),
-'latbnd': (27.521145926043143, 45.661497708803246),
-'title': 'Med. Sea',
-'popup':  '''
-    <h1> This is a big popup</h1><br>
-    With a few lines of code...
-    <p>
-    <code>
-        from numpy import *<br>
-        exp(-2*pi)
-    </code>
-    </p>
-    ''',
-}
+# Function to reconstruct the IFrame HTML from text and
+# style
+def build_html(text):
+    strout = ""
+    strout += """
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+    """
+    strout += style
+    strout += """
+        </style>
+    </head>
+    <body>
+    """
+    strout += text
+    strout += """
+    </body>
+</html>
+"""
+
+    return strout
+
+# Recover the content of the HTML file
+import pathlib
+with open('style.css', 'r') as f:
+    style = f.read()
 
 # Create a Map instance
-m = folium.Map(zoom_start=2, control_scale=True, location=[0, 0], tiles=None)
+m = folium.Map(zoom_start=3, control_scale=True, location=[0, 0], tiles=None)
 
 tile1 = folium.TileLayer(
     tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -43,8 +58,6 @@ tile2 = folium.TileLayer(
 
 tile1.add_to(m)
 
-col = ['red', 'blue']
-
 cpt = 0
 N = len(domains) - 1
 for d in domains.values():
@@ -59,8 +72,9 @@ for d in domains.values():
     lat = [latbnd[0], latbnd[0], latbnd[1], latbnd[1], latbnd[0]]
     points = np.array([lat, lon]).T + cpt * 10
 
-    html = d['popup']
-    iframe = folium.IFrame(html)
+    with open(d['popup'], 'r') as f:
+        content = f.read()
+    iframe = folium.IFrame(build_html(content))
     popup = folium.Popup(iframe,
                      min_width=500,
                      max_width=500)
