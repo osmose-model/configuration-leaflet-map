@@ -7,7 +7,7 @@ import matplotlib.colors as cl
 from pathlib import Path
 from domains import domains
 
-cmap = mp.colormaps['Spectral']
+cmap = mp.colormaps['jet']
 
 # Function to reconstruct the IFrame HTML from text and
 # style
@@ -56,7 +56,14 @@ tile2 = folium.TileLayer(
         control=True
         )
 
-tile1.add_to(m)
+tile3 = folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+    attr = 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
+    overlay=False,
+    control=True
+)
+
+tile3.add_to(m)
 
 cpt = 0
 N = len(domains) - 1
@@ -70,7 +77,7 @@ for d in domains.values():
     latbnd = d['latbnd']
     lon = [lonbnd[0], lonbnd[1], lonbnd[1], lonbnd[0], lonbnd[0]]
     lat = [latbnd[0], latbnd[0], latbnd[1], latbnd[1], latbnd[0]]
-    points = np.array([lat, lon]).T + cpt * 10
+    points = np.array([lat, lon]).T
 
     with open(d['popup'], 'r') as f:
         content = f.read()
@@ -81,16 +88,15 @@ for d in domains.values():
 
     folium.Polygon(
         locations=points,
-        weight=1,
+        weight=2,
         color=color,
         fill_color=color,
-        fill_opacity=0.5,
+        fill_opacity=0.4,
         fill=True,
         popup=popup,
-        #tooltip="Click me!",
+        tooltip=d['title'],
+        line_join="round",
     ).add_to(m)
-
     cpt += 1
-
 
 m.save('index.html')

@@ -13,3 +13,10 @@ domains['EEC'] = {
     'title': 'EEC',
     'popup': 'html/eec.html'
 }
+
+domains['GOG'] = {
+    'lonbnd': (9.92157959514821, 13.2878854317073),
+    'latbnd': (33.2482952156067, 34.9969249687195),
+    'title': 'GOG',
+    'popup': 'html/gog.html'
+}
