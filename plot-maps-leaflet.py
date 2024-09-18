@@ -7,7 +7,7 @@ import matplotlib.colors as cl
 from pathlib import Path
 from domains import domains
 
-cmap = mp.colormaps['jet']
+cmap = mp.colormaps['hsv']
 
 # Function to reconstruct the IFrame HTML from text and
 # style
@@ -42,7 +42,8 @@ with open('style.css', 'r') as f:
 m = folium.Map(zoom_start=3, control_scale=True, location=[0, 0], tiles=None)
 
 tile1 = folium.TileLayer(
-    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    #tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}',
     attr='Esri',
     name='Esri Satellite',
     overlay=False,
@@ -65,7 +66,12 @@ tile3 = folium.TileLayer(
 
 tile1.add_to(m)
 
-BASE_COLORS = {'b': (0, 0, 1), 'g': (0, 0.5, 0), 'r': (1, 0, 0), 'c': (0, 0.75, 0.75), 'm': (0.75, 0, 0.75), 'y': (0.75, 0.75, 0)}
+BASE_COLORS = {'k': (0.0, 0.0, 0.0), 'g': (0, 0.5, 0), 'r': (1, 0, 0), 'c': (0, 0.75, 0.75), 'm': (0.75, 0, 0.75), 'y': (0.75, 0.75, 0)}
+# BASE_COLORS = {}
+# BASE_COLORS['blue'] = (12.2 / 100, 46.7 / 100, 70.6 / 100)
+# BASE_COLORS['orange'] = (100 / 100, 49.8 / 100, 5.5 / 100)
+
+
 colnames = list(BASE_COLORS.keys())
 
 print(cl.BASE_COLORS)
@@ -75,11 +81,8 @@ cpt = 0
 N = len(domains) - 1
 for d in domains.values():
     print('---------------------------------- ', d['title'])
-    color = cmap(cpt / (N - 1))
-    color = BASE_COLORS[colnames[cpt % len(colnames)]]
-    colorhex = cl.to_hex(color, keep_alpha=False)
-    r, g, b, a = cl.to_rgba(color)
-    print(r, g, b, a)
+    r, g, b = BASE_COLORS[colnames[cpt % len(colnames)]]
+    print(r, g, b)
 
     with open(d['popup'], 'r') as f:
         content = f.read()
@@ -95,13 +98,11 @@ for d in domains.values():
     else:
         dlon = np.mean(np.diff(data['lon'].values[0, :]))
         dlat = np.mean(np.diff(data['lat'].values[:, 0]))
-    print(dlat, dlon)
 
     if 'lat_offset' in d.keys():
         lat_offset = d['lat_offset']
     else:
         lat_offset = 0
-    print(lat_offset)
 
     factor = 0.5
     lonmin = float(data['lon'].min())
@@ -113,14 +114,14 @@ for d in domains.values():
         image=image,
         bounds=[[latmin, lonmin], [latmax, lonmax]],
         colormap=lambda x: (r, g, b, x),
-        opacity=0.6,
+        opacity=0.8,
     ).add_to(m)
 
     folium.Rectangle(
         bounds=[[latmin, lonmin], [latmax, lonmax]],
         weight=0,
-        color=colorhex,
-        fill_color=colorhex,
+        color=(r, g, b),
+        fill_color=(r, g,b),
         fill_opacity=0.0,
         fill=True,
         popup=popup,
