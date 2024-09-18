@@ -63,21 +63,23 @@ tile3 = folium.TileLayer(
     control=True
 )
 
-tile3.add_to(m)
+tile1.add_to(m)
 
+BASE_COLORS = {'b': (0, 0, 1), 'g': (0, 0.5, 0), 'r': (1, 0, 0), 'c': (0, 0.75, 0.75), 'm': (0.75, 0, 0.75), 'y': (0.75, 0.75, 0)}
+colnames = list(BASE_COLORS.keys())
+
+print(cl.BASE_COLORS)
+
+# +
 cpt = 0
 N = len(domains) - 1
 for d in domains.values():
-    if N == 0:
-        color = cmap(0)
-    else:
-        color = cmap(cpt / N)
-    color = cl.to_hex(color, keep_alpha=False)
-    lonbnd = d['lonbnd']
-    latbnd = d['latbnd']
-    lon = [lonbnd[0], lonbnd[1], lonbnd[1], lonbnd[0], lonbnd[0]]
-    lat = [latbnd[0], latbnd[0], latbnd[1], latbnd[1], latbnd[0]]
-    points = np.array([lat, lon]).T
+    print('---------------------------------- ', d['title'])
+    color = cmap(cpt / (N - 1))
+    color = BASE_COLORS[colnames[cpt % len(colnames)]]
+    colorhex = cl.to_hex(color, keep_alpha=False)
+    r, g, b, a = cl.to_rgba(color)
+    print(r, g, b, a)
 
     with open(d['popup'], 'r') as f:
         content = f.read()
@@ -86,17 +88,47 @@ for d in domains.values():
                      min_width=500,
                      max_width=500)
 
-    folium.Polygon(
-        locations=points,
-        weight=2,
-        color=color,
-        fill_color=color,
-        fill_opacity=0.4,
+    data = xr.open_dataset(d['map'])
+    if(data['lon'].values.ndim == 1):
+        dlon = np.mean(np.diff(data['lon'].values))
+        dlat = np.mean(np.diff(data['lat'].values))
+    else:
+        dlon = np.mean(np.diff(data['lon'].values[0, :]))
+        dlat = np.mean(np.diff(data['lat'].values[:, 0]))
+    print(dlat, dlon)
+
+    if 'lat_offset' in d.keys():
+        lat_offset = d['lat_offset']
+    else:
+        lat_offset = 0
+    print(lat_offset)
+
+    factor = 0.5
+    lonmin = float(data['lon'].min())
+    lonmax = float(data['lon'].max())
+    latmin = float(data['lat'].min()) + lat_offset
+    latmax = float(data['lat'].max()) + lat_offset
+    image = data['mask'].values[::-1, :]
+    folium.raster_layers.ImageOverlay(
+        image=image,
+        bounds=[[latmin, lonmin], [latmax, lonmax]],
+        colormap=lambda x: (r, g, b, x),
+        opacity=0.6,
+    ).add_to(m)
+
+    folium.Rectangle(
+        bounds=[[latmin, lonmin], [latmax, lonmax]],
+        weight=0,
+        color=colorhex,
+        fill_color=colorhex,
+        fill_opacity=0.0,
         fill=True,
         popup=popup,
         tooltip=d['title'],
         line_join="round",
     ).add_to(m)
+
     cpt += 1
 
 m.save('index.html')
+# -

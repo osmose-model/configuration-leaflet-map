@@ -1,22 +1,26 @@
 # Init the domains
 domains = {}
 domains['MED'] = {
-'lonbnd': (-8.018472178892981, 38.83837833251987),
-'latbnd': (27.521145926043143, 45.661497708803246),
-'title': 'Med. Sea',
-'popup': 'html/medsea.html'
+    'map': 'maps/med_mask.nc',
+    'title': 'Med. Sea',
+    'popup': 'html/medsea.html',
+    'lat_offset': -3 * 1/12
+}
+
+domains['NS'] = {
+    'map': 'maps/ns_mask.nc',
+    'title': 'NS',
+    'popup': 'html/ns.html'
 }
 
 domains['EEC'] = {
-    'lonbnd': ((-1.95, 2.4500003)),
-    'latbnd': (49.05, 51.15),
     'title': 'EEC',
+    'map': 'maps/eec_mask.nc',
     'popup': 'html/eec.html'
 }
 
 domains['GOG'] = {
-    'lonbnd': (9.92157959514821, 13.2878854317073),
-    'latbnd': (33.2482952156067, 34.9969249687195),
+    'map': 'maps/gog_mask.nc',
     'title': 'GOG',
     'popup': 'html/gog.html'
 }
