@@ -6,6 +6,8 @@ import os
 import matplotlib.colors as cl
 from pathlib import Path
 from domains import domains
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 cmap = mp.colormaps['hsv']
 
@@ -32,6 +34,24 @@ def build_html(text):
 """
 
     return strout
+
+def colorize(array, r, g, b):
+
+    array = array.astype(int)
+    col1 = [r, g, b, 0]
+    col2 = [r, g, b, 1]
+    newcmp = ListedColormap([col1, col2])
+    normed_data = (array - array.min()) / (array.max() - array.min())
+
+    fig = plt.figure()
+    cs = plt.imshow(array, cmap=newcmp)
+    cs.set_clim(0, 1)
+    plt.colorbar(cs)
+    plt.savefig(str(cpt))
+    plt.close(fig)
+    
+    print(newcmp(normed_data))
+    return newcmp(normed_data)
 
 # Recover the content of the HTML file
 import pathlib
@@ -67,14 +87,11 @@ tile3 = folium.TileLayer(
 tile1.add_to(m)
 
 BASE_COLORS = {'k': (0.0, 0.0, 0.0), 'g': (0, 0.5, 0), 'r': (1, 0, 0), 'c': (0, 0.75, 0.75), 'm': (0.75, 0, 0.75), 'y': (0.75, 0.75, 0)}
-# BASE_COLORS = {}
-# BASE_COLORS['blue'] = (12.2 / 100, 46.7 / 100, 70.6 / 100)
-# BASE_COLORS['orange'] = (100 / 100, 49.8 / 100, 5.5 / 100)
-
+#BASE_COLORS = {}
+#BASE_COLORS['blue'] = (12.2 / 100, 46.7 / 100, 70.6 / 100)
+#BASE_COLORS['orange'] = (100 / 100, 49.8 / 100, 5.5 / 100)
 
 colnames = list(BASE_COLORS.keys())
-
-print(cl.BASE_COLORS)
 
 # +
 cpt = 0
@@ -82,7 +99,6 @@ N = len(domains) - 1
 for d in domains.values():
     print('---------------------------------- ', d['title'])
     r, g, b = BASE_COLORS[colnames[cpt % len(colnames)]]
-    print(r, g, b)
 
     with open(d['popup'], 'r') as f:
         content = f.read()
@@ -110,12 +126,12 @@ for d in domains.values():
     latmin = float(data['lat'].min()) + lat_offset
     latmax = float(data['lat'].max()) + lat_offset
     image = data['mask'].values[::-1, :]
+    display = colorize(image, r, g, b)
     folium.raster_layers.ImageOverlay(
-        image=image,
+        display,
         bounds=[[latmin, lonmin], [latmax, lonmax]],
-        colormap=lambda x: (r, g, b, x),
-        opacity=0.8,
     ).add_to(m)
+
 
     folium.Rectangle(
         bounds=[[latmin, lonmin], [latmax, lonmax]],
