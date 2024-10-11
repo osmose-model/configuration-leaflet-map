@@ -29,5 +29,5 @@ for f in filelist:
     ax.pcolormesh(lon, lat, mask, cmap=newcmp, transform=ccrs.PlateCarree())
     ax.add_feature(cfeature.LAND, color='DarkGray', zorder=3)
     ax.add_feature(cfeature.COASTLINE, zorder=4)
-    plt.savefig(f.replace('.nc', '.svg'), bbox_inches='tight')
+    plt.savefig(f.replace('.nc', '.png'), bbox_inches='tight')
     plt.close(fig)

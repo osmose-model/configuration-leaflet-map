@@ -8,6 +8,8 @@ from pathlib import Path
 from domains import domains
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+import branca
+import base64
 
 cmap = mp.colormaps['hsv']
 
@@ -32,18 +34,18 @@ def build_html(d):
     <body>
     """
     
-    toto = d['map'].replace('.nc', '.svg')
-    filename = os.path.realpath(toto)
-    print(filename)
-    #filename = 'https://osmose-model.org/wp-content/uploads/2020/10/bmnfbcciiapaodjn.png'
-    strout += '<img src="file://%s">\n' %filename
+    toto = d['map'].replace('.nc', '.png')
+    data_uri = base64.b64encode(open(toto, 'rb').read()).decode('utf-8')
+    strout += '<div align="center">\n'
+    img_tag = '<img src="data:image/png;base64,{0}" height="200" align="center">'.format(data_uri)
+    strout += img_tag + '\n'
+    strout += '</div>'
     strout += text
     strout += """
     </body>
 </html>
 """
 
-    print(strout)
     return strout
 
 def colorize(array, r, g, b):
@@ -110,10 +112,10 @@ for d in domains.values():
     print('---------------------------------- ', d['title'])
     r, g, b = BASE_COLORS[colnames[cpt % len(colnames)]]
 
-    iframe = folium.IFrame(build_html(d))
+    iframe = branca.element.IFrame(build_html(d), width=500, height=800)
     popup = folium.Popup(iframe,
                      min_width=500,
-                     max_width=500)
+                     max_width=500, min_height=800)
 
     data = xr.open_dataset(d['map'])
     if(data['lon'].values.ndim == 1):
