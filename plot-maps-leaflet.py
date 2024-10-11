@@ -13,7 +13,11 @@ cmap = mp.colormaps['hsv']
 
 # Function to reconstruct the IFrame HTML from text and
 # style
-def build_html(text):
+def build_html(d):
+    
+    with open(d['popup'], 'r') as f:
+        text = f.read()
+    
     strout = ""
     strout += """
 <!DOCTYPE html>
@@ -27,12 +31,19 @@ def build_html(text):
     </head>
     <body>
     """
+    
+    toto = d['map'].replace('.nc', '.svg')
+    filename = os.path.realpath(toto)
+    print(filename)
+    #filename = 'https://osmose-model.org/wp-content/uploads/2020/10/bmnfbcciiapaodjn.png'
+    strout += '<img src="file://%s">\n' %filename
     strout += text
     strout += """
     </body>
 </html>
 """
 
+    print(strout)
     return strout
 
 def colorize(array, r, g, b):
@@ -50,7 +61,6 @@ def colorize(array, r, g, b):
     plt.savefig(str(cpt))
     plt.close(fig)
     
-    print(newcmp(normed_data))
     return newcmp(normed_data)
 
 # Recover the content of the HTML file
@@ -100,9 +110,7 @@ for d in domains.values():
     print('---------------------------------- ', d['title'])
     r, g, b = BASE_COLORS[colnames[cpt % len(colnames)]]
 
-    with open(d['popup'], 'r') as f:
-        content = f.read()
-    iframe = folium.IFrame(build_html(content))
+    iframe = folium.IFrame(build_html(d))
     popup = folium.Popup(iframe,
                      min_width=500,
                      max_width=500)
@@ -127,23 +135,28 @@ for d in domains.values():
     latmax = float(data['lat'].max()) + lat_offset
     image = data['mask'].values[::-1, :]
     display = colorize(image, r, g, b)
-    folium.raster_layers.ImageOverlay(
-        display,
-        bounds=[[latmin, lonmin], [latmax, lonmax]],
-    ).add_to(m)
+
+    folium.Marker(
+            location=[data['lat'].mean(), data['lon'].mean()],
+            popup=popup).add_to(m)
+
+    #folium.raster_layers.ImageOverlay(
+    #    display,
+    #    bounds=[[latmin, lonmin], [latmax, lonmax]],
+    #).add_to(m)
 
 
-    folium.Rectangle(
-        bounds=[[latmin, lonmin], [latmax, lonmax]],
-        weight=0,
-        color=(r, g, b),
-        fill_color=(r, g,b),
-        fill_opacity=0.0,
-        fill=True,
-        popup=popup,
-        tooltip=d['title'],
-        line_join="round",
-    ).add_to(m)
+    #folium.Rectangle(
+    #    bounds=[[latmin, lonmin], [latmax, lonmax]],
+    #    weight=0,
+    #    color=(r, g, b),
+    #    fill_color=(r, g,b),
+    #    fill_opacity=0.0,
+    #    fill=True,
+    #    popup=popup,
+    #    tooltip=d['title'],
+    #    line_join="round",
+    #).add_to(m)
 
     cpt += 1
 
