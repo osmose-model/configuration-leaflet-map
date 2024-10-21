@@ -140,7 +140,7 @@ for d in domains.values():
 
     folium.Marker(
             location=[data['lat'].mean(), data['lon'].mean()],
-            popup=popup).add_to(m)
+            popup=popup, icon=folium.Icon(prefix='fa', icon='fish', color='darkblue', icon_color='white')).add_to(m)
 
     #folium.raster_layers.ImageOverlay(
     #    display,

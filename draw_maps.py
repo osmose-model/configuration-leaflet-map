@@ -21,13 +21,13 @@ for f in filelist:
         lat = data['lat']
 
     fig = plt.figure()
-    ax = plt.axes(projection=ccrs.PlateCarree())
+    ax = plt.axes(projection=ccrs.Mercator())
 
     col1 = [0, 0, 0, 0]
     col2 = 'steelblue'
     newcmp = ListedColormap([col1, col2])
     ax.pcolormesh(lon, lat, mask, cmap=newcmp, transform=ccrs.PlateCarree())
-    ax.add_feature(cfeature.LAND, color='DarkGray', zorder=3)
-    ax.add_feature(cfeature.COASTLINE, zorder=4)
+    ax.add_feature(cfeature.LAND, color=np.array((240, 240, 220)) / 256.)
+    ax.add_feature(cfeature.COASTLINE)
     plt.savefig(f.replace('.nc', '.png'), bbox_inches='tight')
     plt.close(fig)
