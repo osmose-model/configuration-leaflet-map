@@ -41,7 +41,7 @@ jobs:
         run:  sudo apt install -yq python3-pip
 
       - name: Install dependencies
-        run: pip install xarray cartopy matplotlib numpy
+        run: pip install xarray cartopy matplotlib numpy netcdf4 folium
 
       - name: Build png maps
         run: python draw_maps.py
