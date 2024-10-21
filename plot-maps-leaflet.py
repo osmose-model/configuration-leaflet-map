@@ -11,6 +11,10 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 import branca
 import base64
 
+if not os.path.exists('build'):
+    os.mkdir('build')
+
+
 cmap = mp.colormaps['hsv']
 
 # Function to reconstruct the IFrame HTML from text and
@@ -34,8 +38,12 @@ def build_html(d):
     <body>
     """
     
-    toto = d['map'].replace('.nc', '.png')
-    data_uri = base64.b64encode(open(toto, 'rb').read()).decode('utf-8')
+    f = d['map'].replace('.nc', '.png')
+    fileout = os.path.basename(f).replace('.nc', '.png')
+    fileout = os.path.join('created-maps', fileout)
+    print(fileout)
+
+    data_uri = base64.b64encode(open(fileout, 'rb').read()).decode('utf-8')
     strout += '<div align="center">\n'
     img_tag = '<img src="data:image/png;base64,{0}" height="200" align="center">'.format(data_uri)
     strout += img_tag + '\n'
@@ -162,5 +170,5 @@ for d in domains.values():
 
     cpt += 1
 
-m.save('index.html')
+m.save('build/index.html')
 # -

@@ -7,6 +7,10 @@ import cartopy.feature as cfeature
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 import matplotlib as mpl
+import os
+
+if not os.path.exists('created-maps'):
+    os.mkdir('created-maps')
 
 filelist = glob('maps/*nc')
 
@@ -29,5 +33,7 @@ for f in filelist:
     ax.pcolormesh(lon, lat, mask, cmap=newcmp, transform=ccrs.PlateCarree())
     ax.add_feature(cfeature.LAND, color=np.array((240, 240, 220)) / 256.)
     ax.add_feature(cfeature.COASTLINE)
-    plt.savefig(f.replace('.nc', '.png'), bbox_inches='tight')
+    fileout = os.path.basename(f).replace('.nc', '.png')
+    fileout = os.path.join('created-maps', fileout)
+    plt.savefig(fileout, bbox_inches='tight')
     plt.close(fig)
