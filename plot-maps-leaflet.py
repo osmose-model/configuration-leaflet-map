@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 import branca
 import base64
+import pandas as pd
 
 if not os.path.exists('build'):
     os.mkdir('build')
@@ -20,28 +21,34 @@ cmap = mp.colormaps['hsv']
 # Function to reconstruct the IFrame HTML from text and
 # style
 def build_html(d):
-    
+
     with open(d['popup'], 'r') as f:
         text = f.read()
-    
+
     strout = ""
     strout += """
 <!DOCTYPE html>
 <html>
     <head>
+    """
+    strout += boostrap_link
+    strout += "\n"
+
+    strout +=  """
         <style>
     """
     strout += style
+
     strout += """
         </style>
     </head>
     <body>
     """
-    
+
     f = d['map'].replace('.nc', '.png')
     fileout = os.path.basename(f).replace('.nc', '.png')
     fileout = os.path.join('created-maps', fileout)
-    print(fileout)
+    # print(fileout)
 
     data_uri = base64.b64encode(open(fileout, 'rb').read()).decode('utf-8')
     strout += '<div align="center">\n'
@@ -49,6 +56,17 @@ def build_html(d):
     strout += img_tag + '\n'
     strout += '</div>'
     strout += text
+
+    if 'config' in d.keys():
+        # print("Write config in table")
+        conf = pd.read_csv(d['config'], sep=',', header=None)
+        conf = conf.fillna('')
+        html = conf.to_html(header=False, index=False)
+        html = html.replace('class="dataframe"', 'class="table-striped table-hover w-auto"')
+        strout += '<div align="center">\n'
+        strout += html
+        strout += '</div>'
+
     strout += """
     </body>
 </html>
@@ -70,7 +88,7 @@ def colorize(array, r, g, b):
     plt.colorbar(cs)
     plt.savefig(str(cpt))
     plt.close(fig)
-    
+
     return newcmp(normed_data)
 
 # Recover the content of the HTML file
@@ -106,20 +124,17 @@ tile3 = folium.TileLayer(
 
 tile1.add_to(m)
 
-BASE_COLORS = {'k': (0.0, 0.0, 0.0), 'g': (0, 0.5, 0), 'r': (1, 0, 0), 'c': (0, 0.75, 0.75), 'm': (0.75, 0, 0.75), 'y': (0.75, 0.75, 0)}
-#BASE_COLORS = {}
-#BASE_COLORS['blue'] = (12.2 / 100, 46.7 / 100, 70.6 / 100)
-#BASE_COLORS['orange'] = (100 / 100, 49.8 / 100, 5.5 / 100)
+boostrap_link = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">'
 
-colnames = list(BASE_COLORS.keys())
 
 # +
 cpt = 0
 N = len(domains) - 1
 for d in domains.values():
-    print('---------------------------------- ', d['title'])
-    r, g, b = BASE_COLORS[colnames[cpt % len(colnames)]]
-
+    # print('---------------------------------- ', d['title'])
+    if list(domains.keys())[cpt] == 'NS':
+        lala = 2
+        print(build_html(d))
     iframe = branca.element.IFrame(build_html(d), width=500, height=800)
     popup = folium.Popup(iframe,
                      min_width=500,
@@ -144,31 +159,11 @@ for d in domains.values():
     latmin = float(data['lat'].min()) + lat_offset
     latmax = float(data['lat'].max()) + lat_offset
     image = data['mask'].values[::-1, :]
-    display = colorize(image, r, g, b)
 
     folium.Marker(
             location=[data['lat'].mean(), data['lon'].mean()],
             popup=popup, icon=folium.Icon(prefix='fa', icon='fish', color='darkblue', icon_color='white')).add_to(m)
 
-    #folium.raster_layers.ImageOverlay(
-    #    display,
-    #    bounds=[[latmin, lonmin], [latmax, lonmax]],
-    #).add_to(m)
-
-
-    #folium.Rectangle(
-    #    bounds=[[latmin, lonmin], [latmax, lonmax]],
-    #    weight=0,
-    #    color=(r, g, b),
-    #    fill_color=(r, g,b),
-    #    fill_opacity=0.0,
-    #    fill=True,
-    #    popup=popup,
-    #    tooltip=d['title'],
-    #    line_join="round",
-    #).add_to(m)
-
     cpt += 1
 
 m.save('build/index.html')
-# -

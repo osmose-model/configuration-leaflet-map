@@ -11,7 +11,8 @@ domains['MED'] = {
 domains['NS'] = {
     'map': 'maps/ns_mask.nc',
     'title': 'NS',
-    'popup': 'html/ns.html'
+    'popup': 'html/ns.html',
+    'config': 'csv/ns_config.csv'
 }
 
 domains['EEC'] = {
