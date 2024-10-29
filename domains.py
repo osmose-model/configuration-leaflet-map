@@ -1,12 +1,19 @@
 # Init the domains
 domains = {}
 
-domains['MED'] = {
-    'map': 'maps/med_mask.nc',
-    'title': 'Med. Sea',
-    'popup': 'html/medsea.html',
-    'lat_offset': -3 * 1/12
+domains['BALTIC'] = {
+    'map' : 'maps/med_mask.nc',
+    'title': 'Baltic Sea',
+    'popup': 'html/baltic_sea.html',
+    'config': 'csv/baltic_sea.csv'
 }
+
+#domains['MED'] = {
+#    'map': 'maps/med_mask.nc',
+#    'title': 'Med. Sea',
+#    'popup': 'html/medsea.html',
+#    'lat_offset': -3 * 1/12
+#}
 
 domains['NS'] = {
     'map': 'maps/ns_mask.nc',
@@ -49,7 +56,8 @@ domains['NSB'] = {
 domains['BS'] = {
     'map': 'maps/bs_mask.nc',
     'title': 'BS',
-    'popup': 'html/bs.html'
+    'popup': 'html/bs.html',
+    'config': 'csv/bs_config.csv'
 }
 
 domains['WAP'] = {
