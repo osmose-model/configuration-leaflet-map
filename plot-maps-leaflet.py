@@ -150,6 +150,16 @@ for d in domains.values():
     else:
         lat_offset = 0
 
+
+    status = 'prod'
+    color = 'darkblue'
+    icon_color = 'white'
+    if 'status' in d.keys():
+        status = d['status']
+    if status == 'dev':
+        color = 'darkred'
+        icon_color = 'white'
+
     factor = 0.5
     lonmin = float(data['lon'].min())
     lonmax = float(data['lon'].max())
@@ -159,7 +169,7 @@ for d in domains.values():
 
     folium.Marker(
             location=[data['lat'].mean(), data['lon'].mean()],
-            popup=popup, icon=folium.Icon(prefix='fa', icon='fish', color='darkblue', icon_color='white')).add_to(m)
+            popup=popup, icon=folium.Icon(prefix='fa', icon='fish', color=color, icon_color=icon_color)).add_to(m)
 
     cpt += 1
 

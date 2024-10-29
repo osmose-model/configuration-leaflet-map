@@ -1,6 +1,13 @@
 # Init the domains
 domains = {}
 
+domains['BOB'] = {
+    'map': 'maps/bob_mask.nc',
+    'title': "Bay of Biscay",
+    'popup': "html/template.html",
+    'status': 'dev'
+}
+
 domains['BALTIC'] = {
     'map' : 'maps/med_mask.nc',
     'title': 'Baltic Sea',

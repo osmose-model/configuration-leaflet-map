@@ -15,6 +15,7 @@ if not os.path.exists('created-maps'):
 filelist = glob('maps/*nc')
 
 for f in filelist:
+    print(f)
     data = xr.open_dataset(f)
     mask = data['mask']
     if 'lon_b' in data.variables:
