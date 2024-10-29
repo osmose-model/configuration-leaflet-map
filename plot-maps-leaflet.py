@@ -132,9 +132,6 @@ cpt = 0
 N = len(domains) - 1
 for d in domains.values():
     # print('---------------------------------- ', d['title'])
-    if list(domains.keys())[cpt] == 'NS':
-        lala = 2
-        print(build_html(d))
     iframe = branca.element.IFrame(build_html(d), width=500, height=800)
     popup = folium.Popup(iframe,
                      min_width=500,
