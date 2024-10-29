@@ -1,0 +1,12 @@
+Interannual variability,False
+Spatial resolution,10x10 km2
+Biogeochemical forcings used,True
+Physical forcings used,0
+Number of focal species,13
+Number of resource species,2
+Number of background species,0
+Use fisheries,True
+Number of fisheries,13
+Use bioenergetic module,False
+Use genetic module,False
+Use economic module,False
