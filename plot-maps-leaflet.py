@@ -15,6 +15,8 @@ import pandas as pd
 if not os.path.exists('build'):
     os.mkdir('build')
 
+with open('html/title.html', 'r') as fout:
+    title_html = fout.read()
 
 cmap = mp.colormaps['hsv']
 
@@ -62,7 +64,7 @@ def build_html(d):
         conf = pd.read_csv(d['config'], sep=',', header=None)
         conf = conf.fillna('')
         html = conf.to_html(header=False, index=False)
-        html = html.replace('class="dataframe"', 'class="table-striped table-hover w-auto"')
+        html = html.replace('class="dataframe"', 'class="table-striped w-auto"')
         strout += '<div align="center">\n'
         strout += html
         strout += '</div>'
@@ -73,23 +75,6 @@ def build_html(d):
 """
 
     return strout
-
-def colorize(array, r, g, b):
-
-    array = array.astype(int)
-    col1 = [r, g, b, 0]
-    col2 = [r, g, b, 1]
-    newcmp = ListedColormap([col1, col2])
-    normed_data = (array - array.min()) / (array.max() - array.min())
-
-    fig = plt.figure()
-    cs = plt.imshow(array, cmap=newcmp)
-    cs.set_clim(0, 1)
-    plt.colorbar(cs)
-    plt.savefig(str(cpt))
-    plt.close(fig)
-
-    return newcmp(normed_data)
 
 # Recover the content of the HTML file
 import pathlib
@@ -152,13 +137,12 @@ for d in domains.values():
 
 
     status = 'prod'
-    color = 'darkblue'
-    icon_color = 'white'
+    icon_color = 'darkblue'
+    color = 'lightgray'
     if 'status' in d.keys():
         status = d['status']
     if status == 'dev':
-        color = 'darkred'
-        icon_color = 'white'
+        icon_color = 'darkred'
 
     factor = 0.5
     lonmin = float(data['lon'].min())
@@ -172,5 +156,7 @@ for d in domains.values():
             popup=popup, icon=folium.Icon(prefix='fa', icon='fish', color=color, icon_color=icon_color)).add_to(m)
 
     cpt += 1
+
+m.get_root().html.add_child(folium.Element(title_html))
 
 m.save('build/index.html')
