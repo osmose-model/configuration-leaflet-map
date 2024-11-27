@@ -7,6 +7,13 @@ domains['BOB'] = {
     'status': 'dev'
 }
 
+domains['YS'] = {
+    'map': 'maps/ys_mask.nc',
+    'popup': "html/ys.html",
+    'status': 'dev'
+}
+
+
 #domains['BALTIC'] = {
 #    'map' : 'maps/med_mask.nc',
 #    'popup': 'html/baltic_sea.html',
