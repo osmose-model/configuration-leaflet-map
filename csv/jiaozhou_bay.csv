@@ -1,0 +1,13 @@
+Interannual variability,False
+Spatial resolution,35.95N to 36.30N in latitude (0.01) 120.04E to 120.45E in longitude (0.01)
+Biogeochemical forcings used,NEMURO (North Pacific Ecosystem Model Used for Regional Oceanography)
+Physical forcings used,FVCOM ( Finite Volume Coastal Ocean Model)
+Number of focal species,14
+Number of resource species,5
+Number of background species,0
+Use fisheries,True
+Number of fisheries,14
+Use bioenergetic module,True
+Use genetic module,True
+Use economic module,False
+
