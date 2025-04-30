@@ -32,6 +32,10 @@ filelist.append('maps/zyork_mask.nc')
 #filelist.remove('maps/grid_baltic.nc')
 filelist.remove('maps/gom_mask.nc')
 filelist.append('maps/gom_mask.nc')
+filelist.remove('maps/jiaozhou_bay.nc')
+filelist.append('maps/jiaozhou_bay.nc')
+filelist.remove('maps/cooperation-sea-mask.nc')
+filelist.append('maps/cooperation-sea-mask.nc')
 filelist
 
 
