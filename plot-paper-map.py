@@ -27,17 +27,8 @@ import os
 projin = ccrs.PlateCarree()
 
 filelist = glob('maps/*nc')
-filelist.remove('maps/zyork_mask.nc')
-filelist.append('maps/zyork_mask.nc')
-#filelist.remove('maps/grid_baltic.nc')
-filelist.remove('maps/gom_mask.nc')
-filelist.append('maps/gom_mask.nc')
-filelist.remove('maps/jiaozhou_bay.nc')
-filelist.append('maps/jiaozhou_bay.nc')
-filelist.remove('maps/cooperation-sea-mask.nc')
-filelist.append('maps/cooperation-sea-mask.nc')
+filelist.sort()
 filelist
-
 
 # -
 
@@ -91,6 +82,8 @@ for f in filelist:
     lat = data['lat'].values
     mask = data['mask'].values
     mask = np.ma.masked_where(mask == 0, mask)
+    if f == 'maps/cooperation-sea-mask.nc':
+        mask[0, 0] = 0
     lontmp, lattmp = get_bounds(lon, lat)
     ll = ax.plot(lontmp, lattmp, transform=ccrs.PlateCarree(), lw=3)
     colors.append(ll[0].get_color())
@@ -116,16 +109,14 @@ for f in filelist[:]:
     ax.pcolormesh(lon, lat, mask, cmap=newcmp, transform=ccrs.PlateCarree())
     ax.add_feature(cfeature.LAND, color=np.array((240, 240, 220)) / 256.)
     ax.add_feature(cfeature.COASTLINE, lw=2)
-    
+
     for spine in ax.spines.values():
         spine.set_edgecolor(colors[i])
         spine.set_linewidth(4)
     i += 1
-    
+
     fileout = os.path.basename(f).replace('.nc', '.png')
     #fileout = os.path.join('/home/BARRIER/Nextcloud/Synchronisation', fileout)
     plt.savefig(fileout, bbox_inches='tight', dpi=500)
     plt.close(fig)
 # -
-
-
