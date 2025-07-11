@@ -1,73 +1,85 @@
 # Init the domains
 domains = {}
 
-domains['BOB'] = {
-    'map': 'maps/bob_mask.nc',
-    'popup': "html/bob.html",
+domains['Baltic_Sea'] = {
+    'map': 'maps/baltic_sea_mask.nc',
     'status': 'dev'
 }
 
-domains['YS'] = {
-    'map': 'maps/ys_mask.nc',
-    'popup': "html/ys.html",
-    'status': 'dev'
-}
-
-
-#domains['BALTIC'] = {
-#    'map' : 'maps/med_mask.nc',
-#    'popup': 'html/baltic_sea.html',
-#    'config': 'csv/baltic_sea.csv',
-#}
-
-domains['MED'] = {
-    'map': 'maps/med_mask.nc',
-    'popup': 'html/medsea.html',
-    'config': 'csv/med.csv'
-}
-
-domains['NS'] = {
-    'map': 'maps/ns_mask.nc',
-    'popup': 'html/ns.html',
-    'config': 'csv/ns_config.csv',
-}
-
-domains['EEC'] = {
-    'map': 'maps/eec_mask.nc',
-    'popup': 'html/eec.html',
-    'config': 'csv/eec_config.csv',
-}
-
-domains['GOG'] = {
-    'map': 'maps/gog_mask.nc',
-    'popup': 'html/gog.html',
-    'config': 'csv/gog.csv',
-}
-
-domains['GOL'] = {
-    'map': 'maps/gol_mask.nc',
-    'popup': 'html/gol.html',
-}
-
-domains['BEN'] = {
+domains['Benguela'] = {
     'map': 'maps/ben_mask.nc',
-    'popup': 'html/ben.html',
 }
 
-domains['NSB'] = {
-    'map': 'maps/nsb_mask.nc',
-    'popup': 'html/nsb.html',
+domains['Bay_Of_Biscay'] = {
+    'map': 'maps/bob_mask.nc',
+    'status': 'dev'
 }
 
-
-domains['BS'] = {
+domains['Black_Sea'] = {
     'map': 'maps/bs_mask.nc',
-    'popup': 'html/bs.html',
-    'config': 'csv/bs_config.csv',
 }
 
-domains['WAP'] = {
+domains['Cooperation_Sea'] = {
+    'map': 'maps/cooperation-sea-mask.nc',
+}
+
+domains['Yellow_Sea'] = {
+    'map': 'maps/ys_mask.nc',
+}
+
+domains['Med_Sea'] = {
+    'map': 'maps/med_mask.nc',
+}
+
+domains['North_Sea'] = {
+    'map': 'maps/ns_mask.nc',
+}
+
+domains['Eastern_English_Channel'] = {
+    'map': 'maps/eec_mask.nc',
+}
+
+domains['Gulf_Of_Gabbes'] = {
+    'map': 'maps/gog_mask.nc',
+}
+
+domains['Gulf_Of_Lion'] = {
+    'map': 'maps/gol_mask.nc',
+}
+
+
+domains['North_Canada'] = {
+    'map': 'maps/nsb_mask.nc',
+}
+
+domains['Scotia_Sea'] = {
     'map': 'maps/wap_mask.nc',
-    'popup': 'html/wap.html',
-    'config': 'csv/wap.csv',
+}
+
+domains['Jiaozhou_Bay'] = {
+    'map': 'jiaozhou_bay.nc'
+}
+
+domains['Diomboss'] = {
+    'map': 'maps/diomboss_bamboung_mask.nc'
+}
+
+domains['East_China'] = {
+    'map': 'maps/east_china_mask.nc'
+}
+
+domains['Strait_Of_Georgia'] = {
+    'map': 'maps/mask_sog.nc'
+}
+
+domains['Strait_Of_NY'] = {
+    'map': 'maps/mask_sog.nc'
+}
+
+domains['Gulf_Of_Mexico'] = {
+    'map': 'maps/gom_mask.nc'
+}
+
+domains['Humboldt'] = {
+    'map' : 'maps/humboldt_mask.nc'
 }
