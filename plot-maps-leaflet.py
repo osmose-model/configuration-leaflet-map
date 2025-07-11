@@ -24,8 +24,12 @@ cmap = mp.colormaps['hsv']
 # style
 def build_html(d):
 
-    with open(d['popup'], 'r') as f:
-        text = f.read()
+    file_html = f'html/{d}.html'
+    if os.path.isfile(file_html):
+        with open(file_html, 'r') as f:
+            text = f.read()
+    else:
+        text = ''
 
     strout = ""
     strout += """
@@ -59,7 +63,8 @@ def build_html(d):
     strout += '</div>'
     strout += text
 
-    if 'config' in d.keys():
+    file_csv = f'csv/{d}.csv'
+    if os.path.isfile(file_csv):
         # print("Write config in table")
         conf = pd.read_csv(d['config'], sep=',', header=None)
         conf = conf.fillna('')

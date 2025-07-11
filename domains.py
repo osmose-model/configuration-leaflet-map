@@ -57,7 +57,7 @@ domains['Scotia_Sea'] = {
 }
 
 domains['Jiaozhou_Bay'] = {
-    'map': 'jiaozhou_bay.nc'
+    'map': 'maps/jiaozhou_bay.nc'
 }
 
 domains['Diomboss'] = {
