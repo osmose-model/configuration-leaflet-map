@@ -22,14 +22,18 @@ cmap = mp.colormaps['hsv']
 
 # Function to reconstruct the IFrame HTML from text and
 # style
-def build_html(d):
-
-    file_html = f'html/{d}.html'
+def build_html(dom):
+    print(dom)
+    dom_name = dom[0]
+    dom_val = dom[1]
+    file_html = os.path.join('html', dom_name + '.html')
+    print("------------------- ", file_html)
     if os.path.isfile(file_html):
         with open(file_html, 'r') as f:
             text = f.read()
     else:
         text = ''
+    #print(text)
 
     strout = ""
     strout += """
@@ -51,7 +55,8 @@ def build_html(d):
     <body>
     """
 
-    f = d['map'].replace('.nc', '.png')
+    print(d)
+    f = dom_val['map'].replace('.nc', '.png')
     fileout = os.path.basename(f).replace('.nc', '.png')
     fileout = os.path.join('created-maps', fileout)
     # print(fileout)
@@ -63,10 +68,10 @@ def build_html(d):
     strout += '</div>'
     strout += text
 
-    file_csv = f'csv/{d}.csv'
+    file_csv = f'csv/{dom_name}.csv'
     if os.path.isfile(file_csv):
         # print("Write config in table")
-        conf = pd.read_csv(d['config'], sep=',', header=None)
+        conf = pd.read_csv(file_csv, sep=',', header=None)
         conf = conf.fillna('')
         html = conf.to_html(header=False, index=False)
         html = html.replace('class="dataframe"', 'class="table-striped w-auto"')
@@ -120,9 +125,13 @@ boostrap_link = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bo
 # +
 cpt = 0
 N = len(domains) - 1
-for d in domains.values():
+for dom in domains.items():
+    key = dom[0]
+    d = dom[1]
+    print(key, d)
+
     # print('---------------------------------- ', d['title'])
-    iframe = branca.element.IFrame(build_html(d), width=500, height=800)
+    iframe = branca.element.IFrame(build_html(dom), width=500, height=800)
     popup = folium.Popup(iframe,
                      min_width=500,
                      max_width=500, min_height=800)
